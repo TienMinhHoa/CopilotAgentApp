@@ -8,6 +8,7 @@ export default function Home() {
   return (
     <>
       <CopilotPopup />
+      <h1>Hello</h1>
     </>
   );
 }
