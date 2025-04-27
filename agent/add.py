@@ -5,12 +5,14 @@ from langchain_core.messages import ToolMessage, AIMessage
 from state import AgentState, Products
 
 async def add_node(state:AgentState, config: RunnableConfig):
+    print(f"add node :{state}")
     return state
 
 async def perform_add_product(state:AgentState, config: RunnableConfig):
     ai_message = cast(AIMessage, state["messages"][-2])
     tool_message = cast(ToolMessage, state["messages"][-1])
-    
+    print(f"ai message :{ai_message}")
+    print(f"tool message: {tool_message}")
     if tool_message.content=="YES":
         if ai_message.tool_calls:
             id = ai_message.tool_calls[0]["args"]["id"]

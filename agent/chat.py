@@ -42,6 +42,9 @@ llm = ChatOpenAI(model = "gpt-4o-mini")
 
 tools = [add_products,delete_products]
 async def chat_node(state:AgentState, config: RunnableConfig) :
+    
+    state["products"] = state.get("products", [])
+    
     llm_with_tools = llm.bind_tools(
         [
             *tools
@@ -61,16 +64,14 @@ async def chat_node(state:AgentState, config: RunnableConfig) :
         ],
         config = config
     )
+    ai_message = cast(AIMessage,response)
     if ai_message.tool_calls:
         if ai_message.tool_calls[0]["name"] == "add_products":
-            return {
-                "messages": [ai_message, ToolMessage(
-                    tool_call_id=ai_message.tool_calls[0]["id"],
-                    content="added"
-                )]
-            }
-    ai_message = cast(AIMessage,response)
+            state["messages"] =  [ai_message]
+            print(f"#####################{ai_message}######################")
+            return state
+    
     state["messages"] = [response]
-    print(f"#####################{response}######################")
+    print(f"################# state of agent{state} ###############")
     return state
         
