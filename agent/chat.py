@@ -65,13 +65,18 @@ async def chat_node(state:AgentState, config: RunnableConfig) :
         config = config
     )
     ai_message = cast(AIMessage,response)
-    if ai_message.tool_calls:
-        if ai_message.tool_calls[0]["name"] == "add_products":
-            state["messages"] =  [ai_message]
-            print(f"#####################{ai_message}######################")
-            return state
+    # if ai_message.tool_calls:
+    #     if ai_message.tool_calls[0]["name"] == "add_products":
+    #         state["messages"] =  [ai_message,ToolMessage(
+    #                     tool_call_id=ai_message.tool_calls[0]["id"],
+    #                     content="Research question written.")]
+    #         print(f"#####################{state}######################")
+    #         return state
     
-    state["messages"] = [response]
+    state["messages"] = [ai_message]
     print(f"################# state of agent{state} ###############")
-    return state
+    return {
+        "messages": [response],
+        "products": state.get("products", [])
+    }
         

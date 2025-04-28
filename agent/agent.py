@@ -7,6 +7,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from state import AgentState
 from chat import chat_node
 from add import add_node, perform_add_product
+from delete import delete_node, perform_delete_node
 def route(state: AgentState):
     """Route after the chat node."""
     messages = state.get("messages", [])
@@ -17,7 +18,7 @@ def route(state: AgentState):
         # trips_node or search_node based on the tool name.
         if ai_message.tool_calls:
             tool_name = ai_message.tool_calls[0]["name"]
-            if tool_name in ["add_products"]:
+            if tool_name in ["add_products", "delete_products"]:
                 return "add_product"
     if messages and isinstance(messages[-1], ToolMessage):
         return "chat_node"
@@ -38,4 +39,4 @@ workflow.add_edge("add_product","perform_add_product")
 workflow.add_edge("perform_add_product", "chat_node")
 
 
-graph = workflow.compile(interrupt_after=["add_product"])
+graph = workflow.compile( checkpointer=memory,interrupt_after=["add_product"])
