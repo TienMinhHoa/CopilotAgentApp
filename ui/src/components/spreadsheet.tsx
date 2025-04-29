@@ -79,6 +79,42 @@ export function Spreadsheet() {
     },
   });
 
+  useCopilotAction(
+    {
+      name: "delete_products",
+      description:"Prompt the user for products delete confirmation, then perform product delete",
+      available: "remote",
+      parameters: [
+        {
+          name:"id",
+          type:"string",
+          description: "The id of the product need to be deleted"
+        }
+      ],
+      renderAndWaitForResponse: ({ args, respond}) => {
+        return (
+          <div className="font-bold text-base mb-2">
+            Are you sure you want to delete this product with ID: {args.id}?
+            <div className="mt-4 flex justify-start space-x-2">
+              <button
+                onClick={() => respond?.("NO")}
+                className="px-4 py-2 text-[#6766FC] border border-[#6766FC] rounded text-sm font-bold"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => respond?.("YES")}
+                className="px-4 py-2 bg-[#6766FC] text-white rounded text-sm font-bold"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        );
+      }
+    }
+  )
+
   const products  = state.products || []
 
   

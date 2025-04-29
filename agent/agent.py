@@ -19,7 +19,10 @@ def route(state: AgentState):
         if ai_message.tool_calls:
             tool_name = ai_message.tool_calls[0]["name"]
             if tool_name in ["add_products", "delete_products"]:
-                return "add_product"
+                if tool_name == "add_products":
+                    return "add_product"
+                if tool_name == "delete_products":
+                    return "delete_product"
     if messages and isinstance(messages[-1], ToolMessage):
         return "chat_node"
     
@@ -29,14 +32,18 @@ workflow = StateGraph(AgentState)
 workflow.add_node("chat_node", chat_node)
 workflow.add_node("add_product",add_node)
 workflow.add_node("perform_add_product", perform_add_product)
+workflow.add_node("delete_product",delete_node)
+workflow.add_node("perform_delete_node", perform_delete_node)
 
 memory = MemorySaver()
 # workflow.set_entry_point(START)
-workflow.add_conditional_edges("chat_node", route, ["add_product", "chat_node", END])
+workflow.add_conditional_edges("chat_node", route, ["add_product", "chat_node", "delete_product", END])
 
 workflow.add_edge(START,"chat_node")
 workflow.add_edge("add_product","perform_add_product")
 workflow.add_edge("perform_add_product", "chat_node")
+workflow.add_edge("perform_delete_node","chat_node")
+workflow.add_edge("delete_product", "perform_delete_node")
 
 
-graph = workflow.compile( checkpointer=memory,interrupt_after=["add_product"])
+graph = workflow.compile( checkpointer=memory,interrupt_after=["add_product","delete_product"])
