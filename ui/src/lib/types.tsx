@@ -7,7 +7,6 @@ export type Products = {
   
   export type AgentState = {
     model: string;
-    resources: any[];
     logs: any[];
     products: Products[]
   }

@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
 import {
   useCoAgent,
   useCoAgentStateRender,
   useCopilotAction,
 } from "@copilotkit/react-core";
-
+import React, { useEffect, useRef, useState } from "react";
 import { AgentState, Products } from "@/lib/types";
 import { div } from "framer-motion/client";
+
 export function Spreadsheet() {
 
   const { state, setState } = useCoAgent<AgentState>({

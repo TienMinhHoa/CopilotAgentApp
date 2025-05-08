@@ -2,6 +2,7 @@
   "name": "ui",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -13,7 +14,9 @@
     "@copilotkit/react-ui": "^1.8.9",
     "@copilotkit/runtime": "^1.8.9",
     "framer-motion": "^12.9.2",
+    "fs": "^0.0.1-security",
     "lucide-react": "^0.503.0",
+    "mime-types": "^3.0.1",
     "next": "15.3.1",
     "openai": "^4.96.0",
     "react": "^19.0.0",
@@ -22,6 +25,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/mime-types": "^2.1.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
