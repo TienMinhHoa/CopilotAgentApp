@@ -12,7 +12,7 @@ async def main():
     async with MultiServerMCPClient(
         {
             "gmail": {
-                "url": "https://mcp.composio.dev/hackernews/rapid-harsh-baker-Y_8d2_?agent=cursor",
+                "url": "https://mcp.composio.dev/composio/server/bbc037fb-be7a-4ec9-9ba4-322e83e2842a",
                 "transport": "sse",
             }
         }
