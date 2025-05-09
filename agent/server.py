@@ -33,7 +33,7 @@ def main():
     """Run the uvicorn server."""
     port = int(os.getenv("PORT", "8000"))
     uvicorn.run(
-        "server:app", # the path to your FastAPI file, replace this if its different
+        "server:app", 
         host="0.0.0.0",
         port=port,
         reload=True,

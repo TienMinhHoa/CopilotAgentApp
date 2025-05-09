@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
-
+os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
 
 @tool
 def add_products(
@@ -38,11 +38,17 @@ def delete_products(
 def find_product():
     """find the products"""
 
-llm = ChatOpenAI(model = "gpt-4o-mini")
+@tool
+def process_image(image_url:Annotated[str,"The url of the image"],
+                  user_request: Annotated[str, "The user request"]):
+    """Recieve an image url and process the request of user"""
 
-tools = [add_products,delete_products]
+
+llm = ChatOpenAI(model = "gpt-4o")
+
+tools = [add_products,delete_products,process_image]
 async def chat_node(state:AgentState, config: RunnableConfig) :
-    
+    print("humman messages: ",state)
     state["products"] = state.get("products", [])
     
     llm_with_tools = llm.bind_tools(
@@ -55,6 +61,8 @@ async def chat_node(state:AgentState, config: RunnableConfig) :
     system_message = """
         You are an agent that helps users manage inventory information, including phone products. 
         You help users add, delete, and search for products. 
+        You also help users process images and return all the component in the image. 
+        Becarefull when processing image, the image_path is a url.
     """
    
     response = await llm_with_tools.ainvoke(

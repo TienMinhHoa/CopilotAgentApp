@@ -1,5 +1,6 @@
 from typing import List, TypedDict
 from langgraph.graph import MessagesState
+from pydantic import Field
 
 
 class Products(TypedDict):
@@ -16,4 +17,5 @@ class AgentState(MessagesState):
     model: str
     products: List[Products]
     log: List[Logs]
+    images: List[dict] = Field(default_factory=list)  # For storing image data
     
