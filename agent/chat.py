@@ -39,16 +39,15 @@ def find_product():
     """find the products"""
 
 @tool
-def process_image(image_url:Annotated[str,"The url of the image"],
+def process_file(url:Annotated[str,"The url of the file"],
                   user_request: Annotated[str, "The user request"]):
-    """Recieve an image url and process the request of user"""
+    """Recieve an url of a file(image, pdf, etc) and process the request of user"""
 
 
 llm = ChatOpenAI(model = "gpt-4o")
 
-tools = [add_products,delete_products,process_image]
+tools = [add_products,delete_products,process_file]
 async def chat_node(state:AgentState, config: RunnableConfig) :
-    print("humman messages: ",state)
     state["products"] = state.get("products", [])
     
     llm_with_tools = llm.bind_tools(
@@ -59,10 +58,9 @@ async def chat_node(state:AgentState, config: RunnableConfig) :
     )
 
     system_message = """
-        You are an agent that helps users manage inventory information, including phone products. 
+        You are an agent that helps users manage inventory information. 
         You help users add, delete, and search for products. 
-        You also help users process images and return all the component in the image. 
-        Becarefull when processing image, the image_path is a url.
+        You also help users process file and return all the component in the file. 
     """
    
     response = await llm_with_tools.ainvoke(
@@ -73,18 +71,8 @@ async def chat_node(state:AgentState, config: RunnableConfig) :
         config = config
     )
     ai_message = cast(AIMessage,response)
-    # if ai_message.tool_calls:
-    #     if ai_message.tool_calls[0]["name"] == "add_products":
-    #         state["messages"] =  [ai_message,ToolMessage(
-    #                     tool_call_id=ai_message.tool_calls[0]["id"],
-    #                     content="Research question written.")]
-    #         print(f"#####################{state}######################")
-    #         return state
     
     state["messages"] = [ai_message]
-    print(f"################# state of agent{state} ###############")
-    return {
-        "messages": [response],
-        "products": state.get("products", [])
-    }
+    
+    return state
         

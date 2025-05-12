@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-async def main():
+async def main(message: str):
     model = ChatOpenAI(model="gpt-4o")
     async with MultiServerMCPClient(
         {
@@ -22,11 +22,11 @@ async def main():
         print(tools)
 
         agent_input = {
-            "messages": "Get latest news from hackernews"
+            "messages": message
         }
         agent_response = await react_agent.ainvoke(agent_input)
-        print(agent_response)
+        return agent_response
         
 if __name__ == "__main__":
     import asyncio
-    asyncio.run(main())
+    asyncio.run(main("Get latest news from hackernews"))

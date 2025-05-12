@@ -3,12 +3,26 @@ from fastapi import FastAPI
 import uvicorn
 from copilotkit.integrations.fastapi import add_fastapi_endpoint 
 from copilotkit import CopilotKitRemoteEndpoint, LangGraphAgent 
+from fastapi.middleware.cors import CORSMiddleware
 from agent import graph 
  
 from dotenv import load_dotenv
 load_dotenv()
  
 app = FastAPI()
+
+origins = [
+    "*",  # IP của máy frontend
+    # Hoặc dùng "*" nếu muốn cho phép tất cả (chỉ dùng khi bạn biết chắc an toàn)
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # hoặc ["*"] để cho phép tất cả
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 sdk = CopilotKitRemoteEndpoint(
     agents=[

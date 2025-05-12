@@ -12,7 +12,7 @@ export default function Home() {
     <>
     {/* <YourComponent/> */}
       <Spreadsheet/>
-      <CopilotChat imageUploadsEnabled={true} inputFileAccept={"accept"}/>
+      <CopilotPopup/>
     </>
   );
 }

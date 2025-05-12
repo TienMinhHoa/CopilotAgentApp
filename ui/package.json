@@ -10,9 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@copilotkit/react-core": "^1.8.9",
-    "@copilotkit/react-ui": "^1.8.9",
-    "@copilotkit/runtime": "^1.8.9",
+    "@copilotkit/react-core": "^1.8.11",
+    "@copilotkit/react-textarea": "^1.8.11",
+    "@copilotkit/react-ui": "^1.8.11",
+    "@copilotkit/runtime": "^1.8.11",
     "framer-motion": "^12.9.2",
     "fs": "^0.0.1-security",
     "lucide-react": "^0.503.0",

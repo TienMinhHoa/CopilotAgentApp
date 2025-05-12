@@ -7,7 +7,7 @@ import {
 } from "@copilotkit/react-core";
 import React, { useEffect, useRef, useState } from "react";
 import { AgentState, Products } from "@/lib/types";
-import { div } from "framer-motion/client";
+
 
 export function Spreadsheet() {
 
@@ -47,32 +47,47 @@ export function Spreadsheet() {
         type: "number"
       }
     ],
-    renderAndWait: ({ args, status, respond }) => {
+    renderAndWaitForResponse: ({ args, respond }) => {
+      const [isLoading, setIsLoading] = React.useState(false);
+
+      const handleResponse = async (response: string) => {
+        setIsLoading(true);
+        console.log('Button clicked:', response);
+        console.log('Product details:', args);
+        try {
+          await respond?.(response);
+          console.log('Response sent successfully');
+        } catch (error) {
+          console.error('Error sending response:', error);
+        }
+        setIsLoading(false);
+      };
+
       return (
-        <div
-          className=""
-          data-test-id="delete-resource-generative-ui-container"
-        >
-          <div className="font-bold text-base mb-2">
+        <div className="p-4">
+          <div className="font-bold text-base mb-4">
             Add this product?
           </div>
-          {status === "executing" && (
-            <div className="mt-4 flex justify-start space-x-2">
-              <button
-                onClick={() => respond("NO")}
-                className="px-4 py-2 text-[#6766FC] border border-[#6766FC] rounded text-sm font-bold"
-              >
-                Cancel
-              </button>
-              <button
-                data-test-id="button-delete"
-                onClick={() => respond("YES")}
-                className="px-4 py-2 bg-[#6766FC] text-white rounded text-sm font-bold"
-              >
-                Add
-              </button>
-            </div>
-          )}
+          <div className="mb-4">
+            <p><strong>ID:</strong> {args.id}</p>
+            <p><strong>Name:</strong> {args.name}</p>
+            <p><strong>Description:</strong> {args.description}</p>
+            <p><strong>Cost:</strong> {args.cost?.toLocaleString() ?? '0'}</p>
+          </div>
+          <div className="flex justify-start space-x-2">
+            <button
+              onClick={() => handleResponse("NO")}
+              className="px-4 py-2 text-[#6766FC] border border-[#6766FC] rounded text-sm font-bold disabled:opacity-50 min-w-[100px] hover:bg-[#6766FC] hover:text-white transition-colors duration-200"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => handleResponse("YES")}
+              className="px-4 py-2 bg-[#6766FC] text-white rounded text-sm font-bold disabled:opacity-50 min-w-[100px] hover:bg-[#5251d9] transition-colors duration-200"
+            >
+              Add
+            </button>
+          </div>
         </div>
       );
     },
@@ -91,21 +106,40 @@ export function Spreadsheet() {
         }
       ],
       renderAndWaitForResponse: ({ args, respond}) => {
+        const [isLoading, setIsLoading] = React.useState(false);
+
+        const handleResponse = async (response: string) => {
+          setIsLoading(true);
+          console.log('Delete button clicked:', response);
+          console.log('Product ID to delete:', args.id);
+          try {
+            await respond?.(response);
+            console.log('Delete response sent successfully');
+          } catch (error) {
+            console.error('Error sending delete response:', error);
+          }
+          setIsLoading(false);
+        };
+
         return (
-          <div className="font-bold text-base mb-2">
-            Are you sure you want to delete this product with ID: {args.id}?
-            <div className="mt-4 flex justify-start space-x-2">
+          <div className="p-4">
+            <div className="font-bold text-base mb-4">
+              Are you sure you want to delete this product with ID: {args.id}?
+            </div>
+            <div className="flex justify-start space-x-2">
               <button
-                onClick={() => respond?.("NO")}
-                className="px-4 py-2 text-[#6766FC] border border-[#6766FC] rounded text-sm font-bold"
+                onClick={() => handleResponse("NO")}
+                disabled={isLoading}
+                className="px-4 py-2 text-[#6766FC] border border-[#6766FC] rounded text-sm font-bold disabled:opacity-50 min-w-[100px] hover:bg-[#6766FC] hover:text-white transition-colors duration-200"
               >
-                Cancel
+                {isLoading ? 'Processing...' : 'Cancel'}
               </button>
               <button
-                onClick={() => respond?.("YES")}
-                className="px-4 py-2 bg-[#6766FC] text-white rounded text-sm font-bold"
+                onClick={() => handleResponse("YES")}
+                disabled={isLoading}
+                className="px-4 py-2 bg-[#6766FC] text-white rounded text-sm font-bold disabled:opacity-50 min-w-[100px] hover:bg-[#5251d9] transition-colors duration-200"
               >
-                Delete
+                {isLoading ? 'Processing...' : 'Delete'}
               </button>
             </div>
           </div>
