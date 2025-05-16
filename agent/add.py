@@ -3,9 +3,16 @@ from typing import cast
 from langchain_core.runnables import RunnableConfig
 from langchain_core.messages import ToolMessage, AIMessage
 from state import AgentState, Products
+from langgraph.types import interrupt 
 
 async def add_node(state:AgentState, config: RunnableConfig):
     print(f"add node")
+    # state["messages"].append(ToolMessage(content="YES",tool_call_id = state["messages"][-1].tool_calls[0]["id"]))
+    print(state["messages"][-1])
+    print("tools",state["messages"][-1].tool_calls[0]["args"])
+    content = interrupt(state["messages"][-1].tool_calls[0]["args"])
+
+    state["messages"].append(ToolMessage(content=content,tool_call_id = state["messages"][-1].tool_calls[0]["id"]))
     return state
 
 async def perform_add_product(state:AgentState, config: RunnableConfig):
@@ -40,7 +47,7 @@ async def perform_add_product(state:AgentState, config: RunnableConfig):
                     "description": description,
                     "cost": cost
                 }
-        print(product)
+        # print(product)
         state["products"].append(product)
-        print(state["products"])
+        # print(state["products"])
     return state

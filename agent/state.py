@@ -14,6 +14,7 @@ class Logs(TypedDict):
     done: bool
     
 class AgentState(MessagesState):
+    agent_name: str
     model: str
     products: List[Products]
     log: List[Logs]

@@ -15,8 +15,6 @@ def route(state: AgentState):
     if messages and isinstance(messages[-1], AIMessage):
         ai_message = cast(AIMessage, messages[-1])
         
-        # If the last AI message has tool calls we need to determine to route to the
-        # trips_node or search_node based on the tool name.
         if ai_message.tool_calls:
             tool_name = ai_message.tool_calls[0]["name"]
             if tool_name in ["add_products", "delete_products", "process_file"]:
@@ -51,4 +49,4 @@ workflow.add_edge("delete_product", "perform_delete_node")
 workflow.add_edge("process_file", "chat_node")
 
 
-graph = workflow.compile( checkpointer=memory, interrupt_after=["add_product","delete_product"])
+graph = workflow.compile( checkpointer=memory)

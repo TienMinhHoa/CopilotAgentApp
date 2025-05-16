@@ -1,4 +1,5 @@
 from typing import List, cast, Literal, Annotated
+from copilotkit.langgraph import copilotkit_interrupt 
 from langchain_core.runnables import RunnableConfig
 from langchain_core.messages import SystemMessage, AIMessage, ToolMessage
 from langchain.tools import tool
@@ -44,7 +45,7 @@ def process_file(url:Annotated[str,"The url of the file"],
     """Recieve an url of a file(image, pdf, etc) and process the request of user"""
 
 
-llm = ChatOpenAI(model = "gpt-4o")
+llm = ChatOpenAI(model = "gpt-4o-mini")
 
 tools = [add_products,delete_products,process_file]
 async def chat_node(state:AgentState, config: RunnableConfig) :
